@@ -1,9 +1,9 @@
-name: Example Workflow
+name: CI/CD Pipeline
 
 on: [push]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -13,13 +13,16 @@ jobs:
         with:
           java-version: '11'
 
+      - name: Cache Maven packages
+        uses: actions/cache@v2
+        with:
+          path: \~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
       - name: Build with Maven
-        run: mvn clean test
+        run: mvn clean install
 
-      - name: Set timeout for the job
-        run: echo "Setting timeout to 3600 seconds"
-        env:
-          TIMEOUT: 3600
-
-    timeout:
-      seconds: 3600
+      - name: Run tests
+        run: mvn test
