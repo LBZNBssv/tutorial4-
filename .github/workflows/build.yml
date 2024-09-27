@@ -1,21 +1,12 @@
-name: Run Maven build with cache
+name: Example Workflow
 
 on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout: 3600 # 设置为 1 小时
     steps:
       - uses: actions/checkout@v2
-
-      - name: Cache Maven packages
-        uses: actions/cache@v2
-        with:
-          path: \~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
 
       - name: Set up JDK 11
         uses: actions/setup-java@v1
@@ -24,3 +15,11 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean test
+
+      - name: Set timeout for the job
+        run: echo "Setting timeout to 3600 seconds"
+        env:
+          TIMEOUT: 3600
+
+    timeout:
+      seconds: 3600
