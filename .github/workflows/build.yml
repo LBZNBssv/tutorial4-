@@ -14,5 +14,11 @@ jobs:
         with:
           java-version: '11'
 
+      - name: Check out project
+        run: git clone https://github.com/SE-Design-and-construction/tutorial4.git
+
+      - name: Change directory
+        run: cd tutorial4
+
       - name: Build with Maven
         run: mvn clean test
